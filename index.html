@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>O Pecado Antes do Pecado — Kleyton Hermes</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#F7F2EA; --dark:#12100D; --dark2:#1C1812;
+  --gold:#C9A84C; --gold2:#E8C97A; --rust:#8B3A2A;
+  --ink:#2C2418; --muted:#7A6E5F; --green:#2A5C3A;
+  --line:rgba(201,168,76,0.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{height:100%;overflow:hidden;}
+body{
+  width:100%;height:100%;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 110%,rgba(201,168,76,0.1) 0%,transparent 55%),radial-gradient(ellipse at 15% -10%,rgba(139,58,42,0.12) 0%,transparent 45%),#0A0806;
+  font-family:'DM Sans',sans-serif;
+  display:flex;flex-direction:column;
+}
+
+/* ── STAGE ── */
+#stage{
+  flex:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:10px;
+  overflow:hidden;
+  position:relative;
+}
+
+/* ── BOOK WRAPPER ── */
+#book{
+  position:relative;
+  width:100%;
+  max-width:900px;
+  height:100%;
+  max-height:600px;
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,0.7));
+}
+
+/* ── SPINE ── */
+#spine{
+  display:none; /* hidden on mobile, shown on desktop */
+  position:absolute;left:50%;top:0;width:12px;height:100%;
+  transform:translateX(-50%);z-index:10;
+  background:linear-gradient(180deg,#2E2210 0%,#120E08 40%,#2E2210 100%);
+  box-shadow:0 0 20px rgba(0,0,0,0.9);
+}
+#spine::after{content:'';position:absolute;left:3px;top:0;right:3px;bottom:0;
+  background:linear-gradient(180deg,rgba(201,168,76,0.35),rgba(201,168,76,0.06),rgba(201,168,76,0.35));}
+
+/* ── SPREAD CONTAINER ── */
+#spreads-container{
+  width:100%;height:100%;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ── SPREAD ── */
+.spread{
+  position:absolute;inset:0;
+  display:flex;
+  opacity:0;pointer-events:none;
+  transition:opacity 0s;
+}
+.spread.active{opacity:1;pointer-events:auto;}
+
+/* ── PAGES ── */
+/* DESKTOP: two pages side by side */
+/* MOBILE: single page view */
+.pl,.pr{
+  flex:1;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+  background:var(--cream);
+}
+.pl{border-right:1px solid rgba(0,0,0,0.06);}
+.pr{border-left:1px solid rgba(0,0,0,0.06);}
+
+/* page texture */
+.pl::before,.pr::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+/* PAGE INNER */
+.pi{
+  position:relative;z-index:3;height:100%;
+  padding:clamp(16px,3vw,36px) clamp(14px,3vw,32px) clamp(20px,3vw,40px);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+
+/* RUNNING HEADER */
+.rh{
+  font-family:'Cinzel',serif;font-size:clamp(7px,1.5vw,9px);letter-spacing:0.25em;
+  color:rgba(201,168,76,0.55);text-transform:uppercase;text-align:center;
+  padding-bottom:8px;margin-bottom:12px;
+  border-bottom:1px solid rgba(201,168,76,0.18);flex-shrink:0;
+}
+.rh.dk{color:rgba(201,168,76,0.4);border-color:rgba(201,168,76,0.12);}
+
+/* PAGE NUMBER */
+.pn{font-family:'Cinzel',serif;font-size:clamp(8px,1.5vw,10px);letter-spacing:0.2em;
+  color:var(--muted);margin-top:auto;padding-top:8px;flex-shrink:0;}
+.pn.r{text-align:right;} .pn.l{text-align:left;}
+.pn.dk2{color:rgba(245,240,232,0.3);}
+
+/* CHAPTER LABEL */
+.cl{font-family:'Cinzel',serif;font-size:clamp(8px,1.5vw,9px);letter-spacing:0.28em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:8px;flex-shrink:0;}
+
+/* CHAPTER TITLE */
+.ct{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(16px,3.5vw,26px);font-weight:300;
+  color:var(--ink);line-height:1.18;margin-bottom:clamp(10px,2vw,18px);flex-shrink:0;}
+.ct em{font-style:italic;color:var(--rust);}
+.ct.wh{color:var(--cream);} .ct.wh em{color:var(--gold2);}
+
+/* BODY TEXT */
+.bt{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(11px,2vw,14px);line-height:1.72;
+  color:var(--ink);text-align:justify;hyphens:auto;
+  flex:1;overflow:hidden;}
+.bt p{margin-bottom:clamp(6px,1.5vw,10px);}
+.bt p:last-child{margin-bottom:0;}
+.bt.wh{color:rgba(245,240,232,0.78);}
+.bt strong{font-weight:600;}
+
+/* PULLQUOTE */
+.pq{border-left:2px solid var(--gold);padding:8px 12px;
+  margin:10px 0;background:rgba(201,168,76,0.06);flex-shrink:0;}
+.pq p{font-style:italic;font-size:clamp(11px,2vw,13.5px);
+  color:var(--ink);margin:0!important;line-height:1.5;}
+.pq.wh{background:rgba(201,168,76,0.09);}
+.pq.wh p{color:var(--cream);}
+
+/* BIBLE VERSE */
+.bv{background:var(--dark2);padding:10px 14px;margin:10px 0;flex-shrink:0;}
+.bv p{font-style:italic;font-size:clamp(11px,2vw,13px);
+  color:var(--cream);margin:0!important;line-height:1.5;}
+.bv cite{display:block;font-family:'Cinzel',serif;font-size:clamp(7px,1.4vw,8.5px);
+  letter-spacing:0.2em;color:var(--gold);margin-top:6px;font-style:normal;}
+
+/* HIGHLIGHT BOX */
+.hb{background:var(--dark2);border-left:3px solid var(--gold);
+  padding:10px 12px;margin:10px 0;flex-shrink:0;}
+.hb p{font-family:'Cormorant Garamond',serif;font-size:clamp(11px,2vw,14px);
+  font-style:italic;color:var(--cream);margin:0!important;line-height:1.45;}
+.hb strong{color:var(--gold2);font-style:normal;}
+
+/* FLOW */
+.fl{margin:8px 0;flex-shrink:0;}
+.fi{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;
+  font-size:clamp(10px,1.8vw,13px);color:var(--ink);line-height:1.5;}
+.fi.wh{color:rgba(245,240,232,0.78);}
+.fd{width:6px;height:6px;border-radius:50%;background:var(--gold);
+  flex-shrink:0;margin-top:4px;}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;margin:10px 0;font-size:clamp(9px,1.6vw,12px);}
+.tbl th{font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,8.5px);letter-spacing:0.15em;
+  text-transform:uppercase;padding:8px 10px;border-bottom:2px solid var(--gold);
+  color:var(--gold);background:rgba(201,168,76,0.05);text-align:left;}
+.tbl td{padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl td:first-child{color:var(--rust);font-style:italic;}
+.tbl td:last-child{color:var(--green);font-weight:500;}
+
+/* DARK PAGE */
+.dp{background:var(--dark2)!important;}
+.dp .bt{color:rgba(245,240,232,0.77);}
+.dp .ct{color:var(--cream);}
+.dp .pn{color:rgba(245,240,232,0.3);}
+.dp .rh{color:rgba(201,168,76,0.38);border-color:rgba(201,168,76,0.12);}
+.dp .pq{background:rgba(201,168,76,0.09);}
+.dp .pq p{color:var(--cream);}
+
+/* COVER PAGE */
+.cp{background:var(--dark)!important;}
+.cp::before{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 30%,rgba(201,168,76,0.11) 0%,transparent 60%),
+    radial-gradient(ellipse at 20% 80%,rgba(139,58,42,0.18) 0%,transparent 50%);
+}
+.cp .pi{align-items:center;justify-content:center;text-align:center;z-index:3;}
+
+.cov-ey{font-family:'Cinzel',serif;font-size:clamp(8px,1.5vw,10px);letter-spacing:0.4em;
+  color:rgba(201,168,76,0.65);text-transform:uppercase;margin-bottom:clamp(16px,3vw,26px);}
+.cov-orn{display:flex;align-items:center;gap:10px;width:100%;margin-bottom:clamp(12px,2vw,18px);}
+.cov-ol{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold));}
+.cov-ol.r{background:linear-gradient(90deg,var(--gold),transparent);}
+.cov-os{color:var(--gold);font-size:11px;}
+.cov-t{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(22px,6vw,38px);font-weight:300;
+  color:var(--cream);line-height:1.08;margin-bottom:6px;text-align:center;}
+.cov-t em{color:var(--gold2);font-style:italic;}
+.cov-s{font-family:'Cormorant Garamond',serif;font-size:clamp(10px,2vw,13px);
+  font-style:italic;color:rgba(245,240,232,0.42);
+  margin-bottom:clamp(18px,3vw,30px);line-height:1.55;}
+.cov-a{font-family:'Cinzel',serif;font-size:clamp(9px,1.8vw,11px);
+  letter-spacing:0.3em;color:var(--gold);}
+
+/* PART BREAK */
+.pb{background:var(--dark)!important;}
+.pb::before{
+  content:'';position:absolute;inset:0;z-index:2;
+  background:repeating-linear-gradient(45deg,transparent,transparent 36px,rgba(201,168,76,0.025) 36px,rgba(201,168,76,0.025) 37px);
+}
+.pb .pi{align-items:center;justify-content:center;text-align:center;position:relative;z-index:3;}
+.pb-num{font-family:'Cinzel',serif;font-size:clamp(8px,1.5vw,10px);letter-spacing:0.4em;
+  color:rgba(201,168,76,0.55);text-transform:uppercase;margin-bottom:clamp(14px,2.5vw,20px);}
+.pb-t{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,4.5vw,32px);
+  font-weight:300;color:var(--cream);line-height:1.15;margin-bottom:8px;}
+.pb-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(11px,2vw,13px);
+  font-style:italic;color:rgba(245,240,232,0.32);}
+.pb-line{margin:clamp(14px,2.5vw,22px) auto;height:1px;width:40px;background:var(--gold);opacity:0.45;}
+
+/* BACK COVER */
+.bc{background:var(--dark)!important;}
+.bc .pi{align-items:center;justify-content:center;text-align:center;}
+
+/* ── FLIP ANIMATION ── */
+#flipper{
+  position:absolute;top:0;
+  height:100%;
+  transform-style:preserve-3d;
+  z-index:20;pointer-events:none;
+}
+#flipper.fl-l{right:0;left:50%;transform-origin:left center;}
+#flipper.fl-r{left:0;right:50%;transform-origin:right center;}
+#flipper.go-fwd{transform:rotateY(-180deg);}
+#flipper.go-bck{transform:rotateY(180deg);}
+.ff,.fb{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;}
+.fb{transform:rotateY(180deg);}
+
+/* ── MOBILE: show only one page at a time ── */
+@media(max-width:640px){
+  .spread{display:block;}
+  .pl{
+    width:100%;height:100%;
+    border:none;
+    display:block;
+  }
+  .pr{display:none;}
+  .spread.show-right .pl{display:none;}
+  .spread.show-right .pr{display:block;width:100%;height:100%;border:none;}
+
+  #flipper.fl-l{left:0;right:0;transform-origin:right center;}
+  #flipper.fl-r{left:0;right:0;transform-origin:left center;}
+
+  #spine{display:none!important;}
+}
+
+/* ── CONTROLS ── */
+#ctrl{
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;padding:10px 16px;
+  background:rgba(10,8,6,0.92);
+  border-top:1px solid rgba(201,168,76,0.15);
+}
+#ctrl button{
+  background:none;border:1px solid rgba(201,168,76,0.35);
+  color:var(--gold);font-family:'Cinzel',serif;font-size:clamp(9px,2vw,11px);
+  letter-spacing:0.18em;padding:8px clamp(12px,3vw,20px);cursor:pointer;
+  text-transform:uppercase;transition:all 0.2s;min-width:80px;
+}
+#ctrl button:hover:not(:disabled),
+#ctrl button:active:not(:disabled){background:rgba(201,168,76,0.12);border-color:var(--gold);}
+#ctrl button:disabled{opacity:0.25;cursor:default;}
+#pi-ind{font-family:'Cinzel',serif;font-size:clamp(9px,2vw,10px);
+  letter-spacing:0.2em;color:rgba(201,168,76,0.5);min-width:60px;text-align:center;}
+
+/* ── CLICK ZONES (desktop only) ── */
+.cz{
+  position:absolute;top:0;bottom:0;width:60px;z-index:30;cursor:pointer;
+  display:none;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;
+}
+@media(min-width:641px){.cz{display:flex;}}
+.cz:hover{opacity:1;}
+#cz-l{left:0;} #cz-r{right:0;}
+.ca{font-size:24px;color:rgba(255,255,255,0.12);user-select:none;}
+
+/* HINT */
+#hint{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  font-family:'Cinzel',serif;font-size:clamp(7px,1.8vw,9px);letter-spacing:0.25em;
+  color:rgba(201,168,76,0.28);text-transform:uppercase;
+  white-space:nowrap;pointer-events:none;z-index:100;
+}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="hint" id="hint-txt">Swipe ou use os botões</div>
+
+  <div id="book">
+    <div id="spine"></div>
+
+    <div class="cz" id="cz-l" onclick="flipBack()"><span class="ca">‹</span></div>
+    <div class="cz" id="cz-r" onclick="flipFwd()"><span class="ca">›</span></div>
+
+    <div id="spreads-container">
+
+    <!-- S0: CAPA + DEDICATÓRIA -->
+    <div class="spread active" id="s0">
+      <div class="pl cp">
+        <div class="pi">
+          <p class="cov-ey">Kleyton Hermes</p>
+          <div class="cov-orn"><div class="cov-ol"></div><span class="cov-os">✦</span><div class="cov-ol r"></div></div>
+          <h1 class="cov-t">O Pecado<br>Antes do<br><em>Pecado</em></h1>
+          <p class="cov-s">A mentalidade de escassez<br>e o retorno à abundância</p>
+          <div class="cov-orn"><div class="cov-ol"></div><span class="cov-os">✦</span><div class="cov-ol r"></div></div>
+          <p class="cov-a">Kleyton Hermes</p>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi" style="align-items:center;justify-content:center;text-align:center;">
+          <p style="font-family:'Cinzel',serif;font-size:clamp(8px,1.5vw,10px);letter-spacing:0.3em;color:var(--gold);margin-bottom:20px;">Dedicatória</p>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2.5vw,16px);font-style:italic;color:var(--ink);line-height:1.75;max-width:280px;">Para todos que já olharam para o que não têm — e esqueceram de ver o jardim inteiro ao seu redor.</p>
+          <div style="margin:20px auto;height:1px;width:44px;background:var(--gold);"></div>
+          <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.2em;color:var(--muted);">© 2026 Kleyton Hermes</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S1: SUMÁRIO -->
+    <div class="spread" id="s1">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Sumário</p>
+          <div class="bt">
+            <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.22em;color:var(--gold);margin-bottom:10px;text-transform:uppercase;">Prefácio · 5</p>
+            <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.22em;color:var(--gold);margin-bottom:8px;margin-top:10px;text-transform:uppercase;">Parte I — O Jardim que Tinha Tudo</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 1 · A História que Você Pensa que Conhece · 9</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 2 · A Engenharia da Serpente · 11</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:10px;">Cap. 3 · O Pecado Antes do Pecado · 13</p>
+            <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.22em;color:var(--gold);margin-bottom:8px;text-transform:uppercase;">Parte II — O Ciclo que Ninguém Percebe</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 4 · Como a Escassez Nos Afasta de Deus · 17</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 5 · O Peixe que Chamou a Água de Fraqueza · 19</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:10px;">Cap. 6 · Os Que Caíram e os Que Venceram · 21</p>
+            <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.22em;color:var(--gold);margin-bottom:8px;text-transform:uppercase;">Parte III — Onde o Inimigo Planta</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 7 · A Raiz de Tudo: Identidade · 25</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 8 · A Família · 27</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 9 · A Escola · 29</p>
+          </div>
+          <p class="pn l">3</p>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Sumário</p>
+          <div class="bt" style="padding-top:6px;">
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 10 · A Sexualidade · 31</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 11 · O Trabalho · 33</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:10px;">Cap. 12 · A Política · 35</p>
+            <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.22em;color:var(--gold);margin-bottom:8px;text-transform:uppercase;">Parte IV — As Duas Mentalidades</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 13 · A Frase que Separa Dois Mundos · 39</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:10px;">Cap. 14 · O Que Cada Mentalidade Revela · 41</p>
+            <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.22em;color:var(--gold);margin-bottom:8px;text-transform:uppercase;">Parte V — O Retorno à Abundância</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 15 · A Sentença e o Salvador · 45</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 16 · De Volta à Origem · 47</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:4px;">Cap. 17 · Como a Mentalidade Muda · 50</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);margin-bottom:10px;">Conclusão · 51</p>
+            <p style="font-size:clamp(10px,1.8vw,12px);">Sobre o Autor · 53</p>
+          </div>
+          <p class="pn r">4</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2: PREFÁCIO -->
+    <div class="spread" id="s2">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Prefácio</p>
+          <h2 class="ct">O Momento que<br><em>Mudou Tudo</em></h2>
+          <div class="bt">
+            <p>Este livro nasceu de um momento de silêncio. Não foi numa biblioteca. Foi num desses instantes em que você está pensando em algo que já conhece há anos — e de repente não reconhece mais.</p>
+            <p>Eu estava pensando no Éden. Adão. Eva. A serpente. O fruto. A queda. Conheço cada detalhe — ou pelo menos achava que conhecia. E então uma pergunta surgiu, quieta:</p>
+            <div class="pq"><p>E se o pecado não tivesse começado quando Eva mordeu o fruto?</p></div>
+            <p>Fiquei parado com esse pensamento. Porque se o pecado começa antes do ato — se começa quando Eva parou de enxergar o jardim inteiro — estamos diante de algo muito maior que uma história de desobediência.</p>
+          </div>
+          <p class="pn l">5</p>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Prefácio</p>
+          <div class="bt">
+            <p>Estamos diante do retrato mais preciso da condição humana que já foi escrito. E, provavelmente, diante de um espelho.</p>
+            <div class="hb"><p>Aquilo que a serpente instalou em Eva não ficou no Éden. Chegou até você — com um nome que talvez reconheça mas nunca tenha associado a raiz tão antiga: <strong>Mentalidade de escassez.</strong></p></div>
+            <p>Não é conceito de autoajuda. É uma condição espiritual que opera silenciosamente, disfarçada de responsabilidade e maturidade — com um único efeito devastador:</p>
+            <div class="pq"><p>Ela nos faz parar de buscar a Deus.</p></div>
+            <p>Este livro é sobre isso — e sobre a cura que só vem em Jesus Cristo. Não prometo que será fácil de ler. Prometo que será difícil de ignorar.</p>
+          </div>
+          <p class="pn r">6</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S3: PARTE I + CAP 1 -->
+    <div class="spread" id="s3">
+      <div class="pl pb">
+        <div class="pi">
+          <p class="pb-num">Parte I</p>
+          <p class="pb-t">O Jardim que<br>Tinha Tudo</p>
+          <p class="pb-sub">Gênesis 2 — 3</p>
+          <div class="pb-line"></div>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Parte I — O Jardim que Tinha Tudo</p>
+          <p class="cl">Capítulo Um</p>
+          <h2 class="ct">A História que Você<br>Pensa que <em>Conhece</em></h2>
+          <div class="bt">
+            <p>O que havia no jardim do Éden? Sua mente provavelmente foi direto para a serpente, para o fruto proibido. É como se o jardim inteiro fosse aquela única árvore.</p>
+            <p>Mas leia o texto devagar:</p>
+            <div class="bv"><p>"De toda árvore do jardim comerás livremente."</p><cite>— Gênesis 2:16</cite></div>
+            <p><strong>Toda árvore. Livremente.</strong> O Éden não era restrição disfarçada de paraíso — era abundância real, com uma única exceção no meio de generosidade sem limites. Deus não foi mesquinho no Éden. Foi extravagante. E ainda assim, foi ali que tudo desmoronou — não por falta, mas por distorção.</p>
+          </div>
+          <p class="pn r">9</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S4: CAP 2 + CAP 3 -->
+    <div class="spread" id="s4">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Dois</p>
+          <h2 class="ct">A Engenharia<br>da <em>Serpente</em></h2>
+          <div class="bt">
+            <p>A serpente não chegou com argumento. Chegou com uma pergunta:</p>
+            <div class="bv"><p>"Então Deus disse que não podeis comer de toda árvore do jardim?"</p><cite>— Gênesis 3:1</cite></div>
+            <p>Deus havia dito: <em>"De toda árvore comerás — exceto uma."</em> A serpente transformou em: <em>"Então vocês não podem comer de nada?"</em></p>
+            <div class="hb"><p>Uma única restrição virou <strong>escassez total.</strong> O jardim inteiro foi reduzido à árvore proibida.</p></div>
+            <p>Não foi mentira. Foi distorção. E distorções são mais perigosas porque têm o suficiente de verdade para parecerem razoáveis.</p>
+          </div>
+          <p class="pn l">11</p>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Capítulo Três</p>
+          <p class="cl">Capítulo Três</p>
+          <h2 class="ct">O Pecado<br><em>Antes</em> do Pecado</h2>
+          <div class="bt">
+            <p>Eva comeu o fruto — esse é o pecado que todos conhecem. Mas antes de comer, algo havia mudado nela:</p>
+            <div class="bv"><p>"A mulher viu que a árvore era boa para comer, agradável aos olhos e desejável para dar entendimento."</p><cite>— Gênesis 3:6</cite></div>
+            <p>Três estágios <em>antes</em> do fruto chegar à boca. O pecado mais profundo não foi o ato — foi a decisão interna que o precedeu. O momento em que Eva parou de confiar que o que Deus havia dado era suficiente.</p>
+            <div class="pq"><p>A mentalidade de escassez não foi a consequência da queda — foi a porta de entrada para ela.</p></div>
+          </div>
+          <p class="pn r">13</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S5: PARTE II + CAP 4 -->
+    <div class="spread" id="s5">
+      <div class="pl pb">
+        <div class="pi">
+          <p class="pb-num">Parte II</p>
+          <p class="pb-t">O Ciclo que<br>Ninguém Percebe</p>
+          <p class="pb-sub">O padrão que se repete</p>
+          <div class="pb-line"></div>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Parte II — O Ciclo que Ninguém Percebe</p>
+          <p class="cl">Capítulo Quatro</p>
+          <h2 class="ct">Como a Escassez<br><em>Nos Afasta</em> de Deus</h2>
+          <div class="bt">
+            <p>A mentalidade de escassez não nos afasta de Deus de forma dramática. O afastamento é silencioso — e tem lógica interna que parece razoável.</p>
+            <p>Você tem uma necessidade real. A mentalidade de escassez converte em urgência: <em>"Isso é urgente demais para esperar Deus."</em> Você resolve. Pelos seus meios, na sua força.</p>
+            <div class="hb"><p>Você foi <strong>cortando Deus do processo.</strong> Não com raiva. Com eficiência.</p></div>
+            <p>E quanto mais resolve sozinho, menos busca. E quanto menos busca, mais a escassez aumenta — porque foi cortada a Fonte.</p>
+          </div>
+          <p class="pn r">17</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S6: CAP 5 + CAP 6 -->
+    <div class="spread" id="s6">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Cinco</p>
+          <h2 class="ct">O Peixe que Chamou<br>a Água de <em>Fraqueza</em></h2>
+          <div class="bt">
+            <p>Imagine um peixe fora d'água que olha para a água e pensa: <em>"Voltar ali seria fraqueza."</em></p>
+            <p>É exatamente o que fazemos quando cortamos Deus para resolver sozinhos e chamamos isso de maturidade. Você não foi criado para operar sem Deus — não como limitação, como design.</p>
+            <div class="pq"><p>A escassez que muitas pessoas sentem não é falta de esforço. É falta de Fonte.</p></div>
+          </div>
+          <p class="pn l">19</p>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Capítulo Seis</p>
+          <p class="cl">Capítulo Seis</p>
+          <h2 class="ct">Os Que Caíram<br>e os Que <em>Venceram</em></h2>
+          <div class="bt">
+            <p><strong>Sara</strong> não confiou que Deus proveria o filho. Deu Agar a Abraão. Resultado: Ismael — e um conflito que dura até hoje.</p>
+            <p><strong>Moisés em Meribá</strong> bateu na rocha em vez de falar. A água saiu — mas o preço foi não entrar na terra prometida.</p>
+            <p><strong>Josué em Jericó</strong> marchou em silêncio por seis dias. No sétimo, as muralhas caíram para fora.</p>
+            <p><strong>Davi</strong> foi com pedra e funda: <em>"Venho em nome do Senhor."</em> Golias caiu.</p>
+            <div class="hb"><p>A diferença não estava na força. Estava em <strong>quem buscavam primeiro.</strong></p></div>
+          </div>
+          <p class="pn r">21</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S7: PARTE III + CAP 7 -->
+    <div class="spread" id="s7">
+      <div class="pl pb">
+        <div class="pi">
+          <p class="pb-num">Parte III</p>
+          <p class="pb-t">Onde o Inimigo<br>Planta — E o Que<br>Ele Semeia</p>
+          <p class="pb-sub">Os campos de batalha</p>
+          <div class="pb-line"></div>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Parte III — Onde o Inimigo Planta</p>
+          <p class="cl">Capítulo Sete</p>
+          <h2 class="ct">A Raiz de Tudo:<br><em>Identidade</em></h2>
+          <div class="bt">
+            <p>O inimigo não ataca o que você faz. Ataca o que você acredita que é. Se mudar o que você faz, você pode recomeçar. Mas se mudar quem você acredita que é — você para antes de começar.</p>
+            <div class="bv"><p>"Antes de te formar no ventre materno, te conheci. Antes de nasceres, te consagrei."</p><cite>— Jeremias 1:5</cite></div>
+            <p>A identidade bíblica é <strong>anterior</strong> — vem antes da performance, antes do erro. O inimigo inverte: faz a identidade depender de fora para dentro. Transforma <em>eventos em essência</em> — o que aconteceu vira quem você é.</p>
+          </div>
+          <p class="pn r">25</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S8: CAP 8 + CAP 9 -->
+    <div class="spread" id="s8">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Oito</p>
+          <h2 class="ct">A Família: Onde a<br>Identidade é <em>Formada</em></h2>
+          <div class="bt">
+            <p>A família é o primeiro laboratório de identidade. O mais poderoso. O mais duradouro.</p>
+            <p>O inimigo entra pela ausência do pai — fome de aprovação não preenchida. Pela mãe que não acolheu. Pela comparação constante. Pelo silêncio do que nunca foi dito.</p>
+            <div class="fl">
+              <div class="fi"><div class="fd"></div><div><em>"Você é uma decepção"</em></div></div>
+              <div class="fi"><div class="fd"></div><div><em>"Você precisa merecer ser amado"</em></div></div>
+              <div class="fi"><div class="fd"></div><div><em>"Você é o problema desta família"</em></div></div>
+            </div>
+            <div class="bv"><p>"Como um pai se compadece dos filhos, assim o Senhor se compadece."</p><cite>— Salmo 103:13</cite></div>
+          </div>
+          <p class="pn l">27</p>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Capítulo Nove</p>
+          <p class="cl">Capítulo Nove</p>
+          <h2 class="ct">A Escola: A Guerra<br>pela <em>Identidade</em></h2>
+          <div class="bt">
+            <p>Uma criança entra na escola com uma pergunta aberta: <em>Quem eu sou?</em> Ela ainda não sabe. Está descobrindo. É exatamente essa abertura que o inimigo explora.</p>
+            <div class="hb"><p>Não <em>"errei essa questão"</em> — mas <strong>"não sou inteligente."</strong> Evento virou identidade. O que aconteceu virou quem ela é.</p></div>
+            <p>A vergonha se instala antes da consciência. O inimigo usa essa janela com precisão cirúrgica. O ciclo se fecha: a identidade falsa cria ansiedade — que prejudica a performance — que confirma a mentira.</p>
+            <div class="bv"><p>"Somos feitura de Deus, criados em Cristo Jesus."</p><cite>— Efésios 2:10</cite></div>
+          </div>
+          <p class="pn r">29</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S9: CAP 10 SEXUALIDADE -->
+    <div class="spread" id="s9">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Dez</p>
+          <h2 class="ct">A Sexualidade:<br>A Metáfora que<br><em>Ele Quer Apagar</em></h2>
+          <div class="bt">
+            <p>A sexualidade foi criada por Deus — antes da queda, na plenitude. O inimigo não distorce o que não tem valor. Ele ataca com mais intensidade o que Deus criou com mais intenção.</p>
+            <div class="bv"><p>"O homem se unirá à sua mulher e os dois serão uma só carne."</p><cite>— Gênesis 2:24</cite></div>
+            <p>Paulo em Efésios 5 revela que o casamento homem-mulher é uma metáfora — Cristo e a Igreja. Ao distorcer o design, o inimigo apaga a parábola mais profunda sobre o amor de Deus pela humanidade.</p>
+            <p>O inimigo não entra com ideologia primeiro — entra pela dor. Usa feridas reais para redirecionar fomes legítimas para canais distorcidos.</p>
+          </div>
+          <p class="pn l">31</p>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Capítulo Dez — continuação</p>
+          <div class="bt" style="padding-top:8px;">
+            <p>O que Deus diz sobre a pessoa — separado de qualquer comportamento:</p>
+            <div class="bv"><p>"Nada nos separará do amor de Deus que está em Cristo Jesus, nosso Senhor."</p><cite>— Romanos 8:39</cite></div>
+            <div class="bv"><p>"O vosso corpo é templo do Espírito Santo."</p><cite>— 1 Coríntios 6:19</cite></div>
+            <p><strong>Templo.</strong> Lugar onde Deus habita. Sagrado. Que merece honra.</p>
+            <div class="hb"><p>A cura que o inimigo teme: que a pessoa encontre na Igreja o pai que nunca teve. A comunidade segura que nunca teve. O amor <strong>sem condição.</strong></p></div>
+          </div>
+          <p class="pn r">32</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S10: CAP 11 + CAP 12 -->
+    <div class="spread" id="s10">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Onze</p>
+          <h2 class="ct">O Trabalho:<br>Vocação ou <em>Performance?</em></h2>
+          <div class="bt">
+            <p>Deus projetou o trabalho como vocação — expressão do <em>imago Dei</em>, participação na criação. Não como prova de valor.</p>
+            <p>O inimigo converte: você vale o que produz. E instala a armadilha: <em>"Quando conquistar X, aí sim serei suficiente."</em> A identidade ancorada no cargo desmorona quando o trabalho vai mal.</p>
+            <div class="bv"><p>"Somos feitura de Deus, criados para boas obras."</p><cite>— Efésios 2:10</cite></div>
+            <p>Criados <em>para</em> boas obras — não <em>definidos</em> por elas.</p>
+          </div>
+          <p class="pn l">33</p>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Capítulo Doze</p>
+          <p class="cl">Capítulo Doze</p>
+          <h2 class="ct">A Política:<br>Quando o Medo<br><em>Vira Ódio</em></h2>
+          <div class="bt">
+            <p>A política é o campo onde a distorção opera em escala coletiva. O inimigo usa crise real para instalar medo coletivo — e oferece um inimigo simples para um problema complexo.</p>
+            <p>A distorção mais sofisticada: ele usa versículos reais para objetivos opostos ao coração de Deus.</p>
+            <div class="hb"><p>Quando alguém tem medo suficiente, aceita qualquer narrativa que prometa segurança. <strong>O medo é a cola da distorção política.</strong></p></div>
+            <div class="bv"><p>"Não vos conformeis com este século, mas transformai-vos pela renovação da vossa mente."</p><cite>— Romanos 12:2</cite></div>
+          </div>
+          <p class="pn r">35</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S11: PARTE IV + CAP 13 -->
+    <div class="spread" id="s11">
+      <div class="pl pb">
+        <div class="pi">
+          <p class="pb-num">Parte IV</p>
+          <p class="pb-t">As Duas<br>Mentalidades</p>
+          <p class="pb-sub">Mateus 6:33</p>
+          <div class="pb-line"></div>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Parte IV — As Duas Mentalidades</p>
+          <p class="cl">Capítulo Treze</p>
+          <h2 class="ct">A Frase que<br><em>Separa</em> Dois Mundos</h2>
+          <div class="bt">
+            <div class="bv"><p>"Buscai primeiro o Reino de Deus e a sua justiça, e todas essas coisas vos serão acrescentadas."</p><cite>— Mateus 6:33</cite></div>
+            <p>Antes de ser promessa, esse versículo é diagnóstico. Dois tipos de vida. Dois destinos opostos:</p>
+            <div class="hb"><p>Mentalidade de Escassez: <strong>"Primeiro resolvo — depois me aproximo de Deus."</strong> Trata Deus como recurso de emergência.</p></div>
+            <div class="hb"><p>Mentalidade do Reino: <strong>"Busco a Deus primeiro — a provisão vem como consequência."</strong> Trata Deus como ponto de partida.</p></div>
+          </div>
+          <p class="pn r">39</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S12: CAP 14 TABELA -->
+    <div class="spread" id="s12">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Quatorze</p>
+          <h2 class="ct">O Que Cada<br>Mentalidade <em>Revela</em></h2>
+          <div class="bt">
+            <p>A mentalidade revela o que você <strong>realmente acredita</strong> sobre Deus — não o que diz, mas o que suas decisões cotidianas confessam.</p>
+            <table class="tbl">
+              <thead><tr><th>Escassez</th><th>Reino</th></tr></thead>
+              <tbody>
+                <tr><td>Deus pode não ser suficiente</td><td>Deus é mais que suficiente</td></tr>
+                <tr><td>Preciso garantir sozinho</td><td>Posso confiar a Ele</td></tr>
+                <tr><td>Urgente demais para esperar</td><td>O tempo de Deus é perfeito</td></tr>
+                <tr><td>Deus é plano B</td><td>Deus é o início</td></tr>
+                <tr><td>Fé vem após evidência</td><td>Fé age antes da evidência</td></tr>
+                <tr><td>Resolvo e depois oro</td><td>Oro e depois resolvo</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="pn l">41</p>
+        </div>
+      </div>
+      <div class="pr dp">
+        <div class="pi">
+          <p class="rh dk">Capítulo Quatorze</p>
+          <div class="bt wh" style="padding-top:8px;">
+            <p>Passe os olhos por essa tabela devagar. E seja honesto sobre em qual coluna você vive a maior parte do tempo. Não como condenação. Como diagnóstico.</p>
+            <div class="pq wh"><p>A autossuficiência parece maturidade. Parece responsabilidade. Ninguém declara abertamente que não confia em Deus — mas age como se não confiasse.</p></div>
+            <p>A mentalidade do Reino não produz pessoas passivas. Produz pessoas que agem a partir de confiança — em vez de agirem a partir de medo.</p>
+            <div class="bv"><p>"Não recebestes espírito de escravidão para estardes em temor, mas o espírito de adoção, pelo qual clamamos: Aba, Pai."</p><cite>— Romanos 8:15</cite></div>
+          </div>
+          <p class="pn r dk2">42</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S13: PARTE V + CAP 15 -->
+    <div class="spread" id="s13">
+      <div class="pl pb">
+        <div class="pi">
+          <p class="pb-num">Parte V</p>
+          <p class="pb-t">O Retorno<br>à Abundância</p>
+          <p class="pb-sub">De volta ao jardim</p>
+          <div class="pb-line"></div>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pi">
+          <p class="rh">Parte V — O Retorno à Abundância</p>
+          <p class="cl">Capítulo Quinze</p>
+          <h2 class="ct">A Sentença<br>e o <em>Salvador</em></h2>
+          <div class="bt">
+            <div class="bv"><p>"Pelo pecado de um só homem, a morte passou a todos os homens, porque todos pecaram."</p><cite>— Romanos 5:12</cite></div>
+            <p>Adão foi condenado à morte — não apenas física, mas à separação eterna do único que é Vida. E essa sentença foi transmitida para cada filho nascido dele. Para todos nós.</p>
+            <div class="hb"><p>Todo aquele que nasce de Adão nasce <strong>condenado.</strong> Nenhuma religião resolve. Nenhum esforço moral alcança o que foi perdido no Éden.</p></div>
+          </div>
+          <p class="pn r">45</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S14: CAP 15 cont + CAP 16 -->
+    <div class="spread" id="s14">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Quinze — continuação</p>
+          <div class="bt" style="padding-top:6px;">
+            <p>Mas Deus não deixou a história terminar ali. Dois homens. Dois destinos opostos:</p>
+            <div class="bv"><p>"Pela ofensa de um só morreram muitos; muito mais a graça de Deus e o dom pela graça de um só homem, Jesus Cristo, abundaram para muitos."</p><cite>— Romanos 5:15</cite></div>
+            <p><strong>O primeiro Adão</strong> — desobedeceu. Trouxe pecado, morte e condenação.</p>
+            <p><strong>Jesus Cristo, o segundo Adão</strong> — obedeceu completamente. Trouxe graça, vida e justificação para toda a humanidade que nasceria Dele.</p>
+            <div class="pq"><p>Todo ser humano nasce de Adão, para a morte. Mas há um segundo nascimento disponível — de Cristo, para a vida eterna.</p></div>
+          </div>
+          <p class="pn l">46</p>
+        </div>
+      </div>
+      <div class="pr dp">
+        <div class="pi">
+          <p class="rh dk">Capítulo Dezesseis</p>
+          <p class="cl">Capítulo Dezesseis</p>
+          <h2 class="ct wh">De Volta<br>à <em>Origem</em></h2>
+          <div class="bt wh">
+            <p>Na cruz, Jesus tomou nossa sentença. A troca mais extraordinária da história:</p>
+            <div class="fl">
+              <div class="fi wh"><div class="fd"></div><div>Ele tomou nossa morte — recebemos sua vida</div></div>
+              <div class="fi wh"><div class="fd"></div><div>Ele tomou nossa condenação — recebemos justificação</div></div>
+              <div class="fi wh"><div class="fd"></div><div>Ele tomou nossa orfandade — recebemos filiação</div></div>
+              <div class="fi wh"><div class="fd"></div><div>Ele tomou nossa escassez — recebemos abundância</div></div>
+            </div>
+            <div class="bv"><p>"Se alguém está em Cristo, é nova criatura. As coisas antigas já passaram; eis que surgiram coisas novas."</p><cite>— 2 Coríntios 5:17</cite></div>
+          </div>
+          <p class="pn r dk2">47</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S15: FILHO PRÓDIGO -->
+    <div class="spread" id="s15">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Dezesseis — continuação</p>
+          <div class="bt" style="padding-top:6px;">
+            <p>Jesus contou uma história que resume tudo: o filho pródigo foi, gastou tudo, chegou à escassez absoluta. Ali <em>"voltou a si"</em> — reconheceu que no pai havia pão suficiente. Levantou e foi.</p>
+            <p>Enquanto <em>"estava ainda longe, seu pai o viu"</em> — e correu. Abraçou antes de ouvir a confissão.</p>
+            <div class="fl">
+              <div class="fi"><div class="fd"></div><div>A melhor roupa — <em>identidade restaurada</em></div></div>
+              <div class="fi"><div class="fd"></div><div>O anel — <em>autoridade devolvida</em></div></div>
+              <div class="fi"><div class="fd"></div><div>As sandálias — <em>não é mais escravo</em></div></div>
+              <div class="fi"><div class="fd"></div><div>O bezerro gordo — <em>celebração, não punição</em></div></div>
+            </div>
+            <div class="pq"><p>O pai não restaurou o filho à condição de servo — como o filho havia pedido. Restaurou à condição de filho — como sempre havia sido.</p></div>
+          </div>
+          <p class="pn l">48</p>
+        </div>
+      </div>
+      <div class="pr dp">
+        <div class="pi">
+          <p class="rh dk">Capítulo Dezesseis</p>
+          <div class="bt wh" style="padding-top:8px;">
+            <div class="bv"><p>"E levantando-se, foi para seu pai. E quando ainda estava longe, seu pai o viu, e, movido de íntima compaixão, correu, lançou-se-lhe ao pescoço e o beijou."</p><cite>— Lucas 15:20</cite></div>
+            <p>Essa é a misericórdia que o inimigo não calculou.</p>
+            <p>Quando uma pessoa nasce de novo em Jesus Cristo, ela sai da linhagem de Adão e entra na linhagem de Cristo. Da herança de morte para a herança de vida eterna.</p>
+            <div class="bv"><p>"Vede que amor nos concedeu o Pai, que fôssemos chamados filhos de Deus — e somos."</p><cite>— 1 João 3:1</cite></div>
+            <p><strong>E somos.</strong> Presente. Real. Não condicional.</p>
+          </div>
+          <p class="pn r dk2">49</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S16: CAP 17 + CONCLUSÃO -->
+    <div class="spread" id="s16">
+      <div class="pl">
+        <div class="pi">
+          <p class="rh">O Pecado Antes do Pecado</p>
+          <p class="cl">Capítulo Dezessete</p>
+          <h2 class="ct">Como a<br>Mentalidade <em>Muda</em></h2>
+          <div class="bt">
+            <p>Transformação de mentalidade é um processo com passos concretos:</p>
+            <div class="fl">
+              <div class="fi"><div class="fd"></div><div><strong>Inventário da abundância.</strong> Antes de focar no que falta, veja o que há. Gratidão é o ato radical de enxergar a realidade completa.</div></div>
+              <div class="fi"><div class="fd"></div><div><strong>Identifique onde a escassez opera.</strong> Há uma área onde você resolve primeiro e ora depois. Nomeie.</div></div>
+              <div class="fi"><div class="fd"></div><div><strong>Fé antes da evidência.</strong> Josué marchou antes das muralhas caírem.</div></div>
+              <div class="fi"><div class="fd"></div><div><strong>Quebre a autossuficiência silenciosa.</strong> Pause. Reordene o processo.</div></div>
+              <div class="fi"><div class="fd"></div><div><strong>Volte à Fonte como ponto de partida.</strong> Busque primeiro — sempre.</div></div>
+            </div>
+          </div>
+          <p class="pn l">50</p>
+        </div>
+      </div>
+      <div class="pr dp">
+        <div class="pi">
+          <p class="rh dk">Conclusão</p>
+          <p class="cl">Conclusão</p>
+          <h2 class="ct wh">De Volta<br>ao <em>Início</em></h2>
+          <div class="bt wh">
+            <p>O inimigo distorceu. Adão caiu — e em Adão, todos caímos. A distorção se espalhou por cada área da vida humana.</p>
+            <p>Mas Deus, por misericórdia, deu seu Filho. Jesus Cristo tomou nossa sentença. Abriu o caminho de volta.</p>
+            <p>Todo aquele que nasce de Adão para a morte — pode nascer de Cristo para a vida eterna.</p>
+            <div class="bv"><p>"Buscai primeiro o Reino de Deus — e todas essas coisas vos serão acrescentadas."</p><cite>— Mateus 6:33</cite></div>
+            <p style="text-align:center;font-style:italic;margin-top:8px;font-size:clamp(12px,2.2vw,15px);color:rgba(245,240,232,0.7);">De volta à origem.<br>De volta à abundância.<br>De volta ao Pai. Para sempre.</p>
+          </div>
+          <p class="pn r dk2">51</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S17: AUTOR + CONTRACAPA -->
+    <div class="spread" id="s17">
+      <div class="pl">
+        <div class="pi" style="align-items:center;justify-content:center;text-align:center;">
+          <p style="font-family:'Cinzel',serif;font-size:clamp(8px,1.5vw,10px);letter-spacing:0.3em;color:var(--gold);margin-bottom:18px;">Sobre o Autor</p>
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rust));margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'Cinzel',serif;font-size:20px;color:var(--cream);font-weight:600;">K</span>
+          </div>
+          <h4 style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,3.5vw,24px);font-weight:400;color:var(--ink);margin-bottom:12px;">Kleyton Hermes</h4>
+          <p style="font-size:clamp(11px,2vw,13px);color:var(--muted);line-height:1.75;max-width:270px;">Este livro nasceu de uma visão — e cresceu numa conversa. É o resultado de anos de estudo bíblico, reflexão honesta e a convicção de que a Bíblia ainda tem coisas a dizer que ninguém ouviu direito ainda.</p>
+          <div style="margin:18px auto;height:1px;width:40px;background:var(--gold);"></div>
+          <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.2em;color:var(--muted);">© 2026 Kleyton Hermes</p>
+        </div>
+      </div>
+      <div class="pr bc">
+        <div class="pi" style="align-items:center;justify-content:center;text-align:center;position:relative;">
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(201,168,76,0.1) 0%,transparent 65%);z-index:2;pointer-events:none;"></div>
+          <div style="position:relative;z-index:3;">
+            <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.4em;color:rgba(201,168,76,0.4);margin-bottom:20px;text-transform:uppercase;">Fim</p>
+            <div style="margin:0 auto 18px;width:40px;height:1px;background:rgba(201,168,76,0.3);"></div>
+            <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(14px,3vw,20px);font-style:italic;color:rgba(245,240,232,0.45);line-height:1.65;max-width:220px;">"Buscai primeiro o Reino de Deus."</p>
+            <p style="font-family:'Cinzel',serif;font-size:clamp(7px,1.3vw,9px);letter-spacing:0.22em;color:rgba(201,168,76,0.35);margin-top:10px;">Mateus 6:33</p>
+            <div style="margin:20px auto;width:40px;height:1px;background:rgba(201,168,76,0.3);"></div>
+            <p style="font-family:'Cinzel',serif;font-size:clamp(9px,1.7vw,11px);letter-spacing:0.22em;color:rgba(201,168,76,0.45);">Kleyton Hermes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLIPPER -->
+    <div id="flipper" class="fl-l">
+      <div class="ff" id="ff"></div>
+      <div class="fb" id="fb"></div>
+    </div>
+
+    </div><!-- /spreads-container -->
+  </div><!-- /book -->
+</div><!-- /stage -->
+
+<!-- Controls -->
+<div id="ctrl">
+  <button id="btn-b" onclick="flipBack()" disabled>← Anterior</button>
+  <span id="pi-ind">1 / 36</span>
+  <button id="btn-f" onclick="flipFwd()">Próxima →</button>
+</div>
+
+<script>
+// On mobile each spread has 2 "virtual pages" (left + right)
+// We track a virtual page index
+const isMobile = () => window.innerWidth <= 640;
+
+const SPREADS = 18;
+let spreadIdx = 0;
+let mobileShowRight = false; // false=left page, true=right page
+let busy = false;
+
+const spreads = Array.from(document.querySelectorAll('.spread'));
+const flipper = document.getElementById('flipper');
+const ff = document.getElementById('ff');
+const fb = document.getElementById('fb');
+const btnB = document.getElementById('btn-b');
+const btnF = document.getElementById('btn-f');
+const ind  = document.getElementById('pi-ind');
+
+function totalPages() {
+  return isMobile() ? SPREADS * 2 : SPREADS;
+}
+
+function currentPage() {
+  return isMobile() ? spreadIdx * 2 + (mobileShowRight ? 1 : 0) : spreadIdx;
+}
+
+function updateUI() {
+  const tp = totalPages();
+  const cp = currentPage() + 1;
+  ind.textContent = `${cp} / ${tp}`;
+  // disable back if at very start
+  btnB.disabled = (spreadIdx === 0 && !mobileShowRight);
+  // disable fwd if at very end
+  const atEnd = isMobile()
+    ? (spreadIdx === SPREADS - 1 && mobileShowRight)
+    : (spreadIdx === SPREADS - 1);
+  btnF.disabled = atEnd;
+}
+
+function cloneInto(sIdx, side, target) {
+  const sp = spreads[sIdx];
+  if (!sp) return;
+  const page = sp.querySelector(side === 'l' ? '.pl' : '.pr');
+  if (!page) return;
+  target.innerHTML = '';
+  const c = page.cloneNode(true);
+  Object.assign(c.style, {width:'100%',height:'100%',position:'absolute',inset:'0'});
+  target.appendChild(c);
+}
+
+function showSpread(idx, showRight) {
+  spreads.forEach((s, i) => {
+    s.classList.toggle('active', i === idx);
+    s.classList.toggle('show-right', i === idx && showRight);
+  });
+}
+
+function animate(fromSide, toCloneIdx, toSide, onDone) {
+  flipper.className = fromSide === 'r' ? 'fl-l' : 'fl-r';
+
+  // front = page leaving, back = page arriving
+  if (fromSide === 'r') {
+    // going forward: right page flips left
+    cloneInto(spreadIdx, 'r', ff);
+    if (toSide === 'l') cloneInto(toCloneIdx, 'l', fb);
+    else cloneInto(toCloneIdx, 'r', fb);
+  } else {
+    // going back: left page flips right
+    cloneInto(spreadIdx, 'l', ff);
+    if (toSide === 'r') cloneInto(toCloneIdx, 'r', fb);
+    else cloneInto(toCloneIdx, 'l', fb);
+  }
+
+  ff.style.transform = '';
+  fb.style.transform = 'rotateY(180deg)';
+  flipper.style.cssText = 'transition:none;transform:rotateY(0deg);z-index:20;';
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    flipper.style.transition = 'transform 0.68s cubic-bezier(0.645,0.045,0.355,1.000)';
+    flipper.style.transform = fromSide === 'r' ? 'rotateY(-180deg)' : 'rotateY(180deg)';
+  }));
+
+  setTimeout(() => {
+    flipper.style.cssText = 'transition:none;transform:rotateY(0deg);z-index:5;';
+    onDone();
+    busy = false;
+    updateUI();
+  }, 700);
+}
+
+function flipFwd() {
+  if (busy) return;
+  const atEnd = isMobile()
+    ? (spreadIdx === SPREADS - 1 && mobileShowRight)
+    : (spreadIdx === SPREADS - 1);
+  if (atEnd) return;
+  busy = true;
+
+  if (isMobile()) {
+    if (!mobileShowRight) {
+      // show right page of current spread
+      animate('r', spreadIdx, 'r', () => {
+        mobileShowRight = true;
+        showSpread(spreadIdx, true);
+      });
+    } else {
+      // go to next spread, show left page
+      animate('r', spreadIdx + 1, 'l', () => {
+        spreadIdx++;
+        mobileShowRight = false;
+        showSpread(spreadIdx, false);
+      });
+    }
+  } else {
+    animate('r', spreadIdx + 1, 'l', () => {
+      spreadIdx++;
+      showSpread(spreadIdx, false);
+    });
+  }
+}
+
+function flipBack() {
+  if (busy) return;
+  if (spreadIdx === 0 && !mobileShowRight) return;
+  busy = true;
+
+  if (isMobile()) {
+    if (mobileShowRight) {
+      // go back to left page of current spread
+      animate('l', spreadIdx, 'l', () => {
+        mobileShowRight = false;
+        showSpread(spreadIdx, false);
+      });
+    } else {
+      // go to right page of previous spread
+      animate('l', spreadIdx - 1, 'r', () => {
+        spreadIdx--;
+        mobileShowRight = true;
+        showSpread(spreadIdx, true);
+      });
+    }
+  } else {
+    animate('l', spreadIdx - 1, 'r', () => {
+      spreadIdx--;
+      showSpread(spreadIdx, false);
+    });
+  }
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') flipFwd();
+  if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   flipBack();
+});
+
+// Touch swipe
+let tx = 0, ty = 0;
+document.addEventListener('touchstart', e => {
+  tx = e.touches[0].clientX;
+  ty = e.touches[0].clientY;
+}, {passive:true});
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  const dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+    if (dx < 0) flipFwd();
+    else flipBack();
+  }
+}, {passive:true});
+
+// Init
+showSpread(0, false);
+updateUI();
+
+// Update on resize
+window.addEventListener('resize', () => {
+  mobileShowRight = false;
+  showSpread(spreadIdx, false);
+  updateUI();
+});
+</script>
+</body>
+</html>
